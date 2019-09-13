@@ -19,10 +19,20 @@ class ItemDetailActivity : AppCompatActivity(),
         Toast.makeText(this, "${item} has updated successfully.", Toast.LENGTH_SHORT).show()
     }
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_detail)
         setSupportActionBar(detail_toolbar)
+
+
+
+
+
+
+
+
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)

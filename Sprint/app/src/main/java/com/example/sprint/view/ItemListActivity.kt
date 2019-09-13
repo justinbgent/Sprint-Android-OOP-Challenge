@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.interfaces.R
-import com.example.sprint.model.*
 import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
 import kotlinx.android.synthetic.main.item_list.*
@@ -19,23 +18,9 @@ class ItemListActivity : AppCompatActivity(){
 
     private var twoPane: Boolean = false
 
-    companion object{
-        var vehicles: ArrayList<Vehicle> = ArrayList()
-        var favorite = false
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_list)
-
-        vehicles.clear()
-        vehicles.add(Skateboard())
-        vehicles.add(Car())
-        vehicles.add(Airplane())
-        vehicles.add(Unicycle())
-        vehicles.add(Ripstick())
-        vehicles.add(Boat())
 
         setSupportActionBar(toolbar)
         toolbar.title = title
