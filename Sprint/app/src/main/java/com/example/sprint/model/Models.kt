@@ -4,6 +4,17 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 
+data class Technology(val technologies: List<Techs>)
+
+data class Techs(val id: Int, val name: String, val description: String)
+
+data class Structures(val structures: List<Structs>)
+
+data class Structs(val id: Int, val name: String, val age: String)
+
+
+
+
 abstract class Vehicle(open val id: String, open val weight: Int, open var favorite: Boolean): Parcelable{
     abstract fun travel(): String
 }
