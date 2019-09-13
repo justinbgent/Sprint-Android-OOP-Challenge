@@ -1,4 +1,4 @@
-package com.example.sprint
+package com.example.sprint.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.interfaces.R
-import com.example.interfaces.model.*
 import com.example.sprint.model.*
 import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
@@ -54,11 +53,12 @@ class ItemListActivity : AppCompatActivity(){
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.adapter = SimpleItemRecyclerViewAdapter(
-            this,
-            vehicles,
-            twoPane
-        )
+        recyclerView.adapter =
+            SimpleItemRecyclerViewAdapter(
+                this,
+                vehicles,
+                twoPane
+            )
     }
 
     class SimpleItemRecyclerViewAdapter(

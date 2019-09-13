@@ -1,4 +1,4 @@
-package com.example.sprint
+package com.example.sprint.view
 
 import android.content.Context
 import android.os.Bundle
@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.interfaces.R
-import com.example.sprint.ItemListActivity.Companion.favorite
-import com.example.sprint.ItemListActivity.Companion.vehicles
+import com.example.sprint.view.ItemListActivity.Companion.favorite
+import com.example.sprint.view.ItemListActivity.Companion.vehicles
 import com.example.sprint.model.Vehicle
 import kotlinx.android.synthetic.main.activity_item_detail.*
 import kotlinx.android.synthetic.main.item_detail.view.*
@@ -29,12 +29,6 @@ class ItemDetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 //        TODO: This is just to make my added code easy to find. My code is from here down
         val rootView = inflater.inflate(R.layout.item_detail, container, false)
-
-        rootView.btn_more.setOnClickListener {
-            if (item != null){
-                objectWeight?.getWeight(item?.weight ?: 0)
-            }
-        }
         
         rootView.item_detail.text = item?.travel()
 
@@ -48,41 +42,38 @@ class ItemDetailFragment : Fragment() {
             if (!favorite){
                 rootView.btn_favorite.text = "Unfavorite"
                 favorite = true
-                vehicles.forEach {
-                    if (it.id == item?.id){
-                        it.favorite = favorite
-                    }
-                }
+                updateObject?.updateFavoriteState(favorite, item)
             }else{
                 rootView.btn_favorite.text = "Favorite"
                 favorite = false
-                vehicles.forEach {
-                    if (it.id == item?.id){
-                        it.favorite = favorite
-                    }
-                }
+                updateObject?.updateFavoriteState(favorite, item)
             }
-
         }
         return rootView
     }
 
-    interface ObtainWeight{
-        fun getWeight(weight: Int)
+    interface UpdateArrayObject{
+        fun updateFavoriteState(favorite: Boolean, item: Vehicle?){
+            vehicles.forEach {
+                if (it.id == item?.id){
+                    it.favorite = ItemListActivity.favorite
+                }
+            }
+        }
     }
-    private var objectWeight: ObtainWeight? = null
+    private var updateObject: UpdateArrayObject? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if (context is ObtainWeight){
-            objectWeight = context
+        if (context is UpdateArrayObject){
+            updateObject = context
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        objectWeight = null
+        updateObject = null
     }
 
     companion object {

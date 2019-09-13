@@ -6,13 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:textIsSelectable="true"
-    tools:context="com.example.sprint.ItemDetailFragment">
-
-    <Button
-        android:id="@+id/btn_more"
-        android:text="@string/display_weight"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    tools:context="com.example.sprint.view.ItemDetailFragment">
 
     <Button
         android:id="@+id/btn_favorite"
@@ -28,6 +22,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:textIsSelectable="true"
-        tools:context="com.example.sprint.ItemDetailFragment" />
+        tools:context="com.example.sprint.view.ItemDetailFragment" />
 
 </LinearLayout>

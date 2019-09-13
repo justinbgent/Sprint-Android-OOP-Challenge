@@ -1,4 +1,4 @@
-package com.example.sprint
+package com.example.sprint.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,16 +7,16 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.Toast
-import com.example.sprint.ItemDetailFragment.Companion.ARG_ITEM_ID
+import com.example.sprint.view.ItemDetailFragment.Companion.ARG_ITEM_ID
 import com.example.interfaces.R
 import com.example.sprint.model.Vehicle
 import kotlinx.android.synthetic.main.activity_item_detail.*
 
 class ItemDetailActivity : AppCompatActivity(),
-    ItemDetailFragment.ObtainWeight {
+    ItemDetailFragment.UpdateArrayObject {
 
-    override fun getWeight(weight: Int) {
-        Toast.makeText(this, "Weight: ${weight}lbs", Toast.LENGTH_SHORT).show()
+    override fun updateFavoriteState(favorite: Boolean, item: Vehicle?) {
+        Toast.makeText(this, "${item} has updated successfully.", Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
