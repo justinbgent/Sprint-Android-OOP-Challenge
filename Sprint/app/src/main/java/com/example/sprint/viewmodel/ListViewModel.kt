@@ -1,18 +1,18 @@
 package com.example.sprint.viewmodel
 
-import android.os.Parcelable
-import com.example.sprint.model.Structures
-import com.example.sprint.model.Tech
-import com.example.sprint.model.Technologies
+import android.content.Context
+import android.util.Log
+import com.example.sprint.model.*
 import com.google.gson.GsonBuilder
-import kotlinx.android.parcel.Parcelize
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 
-interface AgeOfEmpireApi{
+interface AgeOfEmpireApi {
 
     @GET("technologies")
     fun getTechnology(): Call<Technologies>
@@ -21,10 +21,10 @@ interface AgeOfEmpireApi{
     fun getStructure(): Call<Structures>
 }
 
-object RetrofitInstance{
+object RetrofitInstance {
     private const val BASE_URL = "https://age-of-empires-2-api.herokuapp.com//api/v1/"
 
-    fun getStructure(): Call<Structures>{
+    fun getStructure(): Call<Structures> {
         val gson = GsonBuilder()
             .setLenient()
             .create()
@@ -37,7 +37,7 @@ object RetrofitInstance{
         return retrofit.create(AgeOfEmpireApi::class.java).getStructure()
     }
 
-    fun getTechnology(): Call<Technologies>{
+    fun getTechnology(): Call<Technologies> {
         val gson = GsonBuilder()
             .setLenient()
             .create()
@@ -51,25 +51,53 @@ object RetrofitInstance{
     }
 }
 
-object NeededValues{
-    lateinit var technology: Technologies
-    lateinit var techs: List<Tech>
+
+class NeededValues(context: Context) {
+    var techs: List<Tech>? = null
+    var structuresAndTechList = mutableListOf<MyValues>()
     var favorite = false
+    var listener: WorkWithThread? = null
 
-    fun getItemsList(): MutableList<MyTechValues>{
-        val myList = mutableListOf<MyTechValues>()
-
-        for(i in techs.indices){
-            myList.add(MyTechValues(techs[i].id, techs[i].name, techs[i].description, false))
-        }
-
-        return myList
+    interface WorkWithThread {
+        fun getList(structAndTechList: MutableList<MyValues>)
     }
 
-    fun getRetrofitInstance(){}
+    init {
+        if (context is WorkWithThread) {
+            listener = context
+        }
+    }
+
+    fun getRetrofitTechInstance() {
+        RetrofitInstance.getTechnology().enqueue(object : Callback<Technologies> {
+            override fun onFailure(call: Call<Technologies>, t: Throwable) {
+                Log.i("findit", "It is failing")
+            }
+
+            override fun onResponse(call: Call<Technologies>, response: Response<Technologies>) {
+                val myList = mutableListOf<MyValues>()
+                response.body()?.technologies?.forEach{
+                    myList.add(it)
+                }
+                listener?.getList(myList)
+            }
+        })
+    }
+
+    fun getRetrofitStructInstance() {
+        RetrofitInstance.getStructure().enqueue(object : Callback<Structures> {
+            override fun onFailure(call: Call<Structures>, t: Throwable) {
+                Log.i("findit", "It is failing")
+            }
+
+            override fun onResponse(call: Call<Structures>, response: Response<Structures>) {
+                val myList = mutableListOf<MyValues>()
+                response.body()?.structures?.forEach{
+                    myList.add(it)
+                }
+                listener?.getList(myList)
+            }
+        })
+
+    }
 }
-
-
-@Parcelize
-class MyTechValues(val id: Int, val name: String, val description: String, val favorite: Boolean):
-    Parcelable

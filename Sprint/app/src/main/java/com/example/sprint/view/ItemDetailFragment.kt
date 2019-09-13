@@ -8,29 +8,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.interfaces.R
-import com.example.sprint.view.ItemListActivity.Companion.favorite
-import com.example.sprint.view.ItemListActivity.Companion.vehicles
-import com.example.sprint.model.Vehicle
+import com.example.sprint.viewmodel.MyValues
+import com.example.sprint.viewmodel.NeededValues.favorite
+import com.example.sprint.viewmodel.NeededValues.structuresAndTechList
 import kotlinx.android.synthetic.main.activity_item_detail.*
 import kotlinx.android.synthetic.main.item_detail.view.*
 
 class ItemDetailFragment : Fragment() {
 
-    private var item: Vehicle? = null
+    private var item: MyValues? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 //        TODO: This is just to make my added code easy to find
-        item = arguments?.getParcelable<Parcelable>(ARG_ITEM_ID) as Vehicle?
-        activity?.toolbar_layout?.title = item?.id ?: "Null"
+        item = arguments?.getParcelable<Parcelable>(ARG_ITEM_ID) as MyValues?
+        activity?.toolbar_layout?.title = item?.name ?: "Null"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 //        TODO: This is just to make my added code easy to find. My code is from here down
         val rootView = inflater.inflate(R.layout.item_detail, container, false)
         
-        rootView.item_detail.text = item?.travel()
+//        rootView.item_detail.text = item?.
 
         if (favorite){
             rootView.btn_favorite.text = "Unfavorite"
@@ -42,31 +42,30 @@ class ItemDetailFragment : Fragment() {
             if (!favorite){
                 rootView.btn_favorite.text = "Unfavorite"
                 favorite = true
-                updateObject?.updateFavoriteState(favorite, item)
+                structuresAndTechList.forEach {
+                    if (it.id == item?.id){
+                        it.favorite = favorite
+                    }
+                }
+                updateObject?.updateFavoriteState(favorite)
             }else{
                 rootView.btn_favorite.text = "Favorite"
                 favorite = false
-                updateObject?.updateFavoriteState(favorite, item)
+                updateObject?.updateFavoriteState(favorite)
             }
         }
         return rootView
     }
 
-    interface UpdateArrayObject{
-        fun updateFavoriteState(favorite: Boolean, item: Vehicle?){
-            vehicles.forEach {
-                if (it.id == item?.id){
-                    it.favorite = ItemListActivity.favorite
-                }
-            }
-        }
+    interface FavoriteState{
+        fun updateFavoriteState(favorite: Boolean)
     }
-    private var updateObject: UpdateArrayObject? = null
+    private var updateObject: FavoriteState? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if (context is UpdateArrayObject){
+        if (context is FavoriteState){
             updateObject = context
         }
     }

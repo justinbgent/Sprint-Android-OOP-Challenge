@@ -9,14 +9,19 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.example.sprint.view.ItemDetailFragment.Companion.ARG_ITEM_ID
 import com.example.interfaces.R
-import com.example.sprint.model.Vehicle
+import com.example.sprint.model.MyValues
 import kotlinx.android.synthetic.main.activity_item_detail.*
 
 class ItemDetailActivity : AppCompatActivity(),
-    ItemDetailFragment.UpdateArrayObject {
+    ItemDetailFragment.FavoriteState {
 
-    override fun updateFavoriteState(favorite: Boolean, item: Vehicle?) {
-        Toast.makeText(this, "${item} has updated successfully.", Toast.LENGTH_SHORT).show()
+    override fun updateFavoriteState(favorite: Boolean) {
+        val favString: String = if (favorite){
+            "Favored"
+        }else{
+            "Unfavored"
+        }
+        Toast.makeText(this, favString, Toast.LENGTH_SHORT).show()
     }
 
 
@@ -25,14 +30,6 @@ class ItemDetailActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_detail)
         setSupportActionBar(detail_toolbar)
-
-
-
-
-
-
-
-
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
@@ -45,7 +42,7 @@ class ItemDetailActivity : AppCompatActivity(),
         if (savedInstanceState == null) {
             val fragment = ItemDetailFragment()
             val bundle = Bundle()
-            val item = intent.getParcelableExtra<Parcelable>(ARG_ITEM_ID) as Vehicle?
+            val item = intent.getParcelableExtra<Parcelable>(ARG_ITEM_ID) as MyValues?
             bundle.putParcelable(ARG_ITEM_ID, item)
             fragment.arguments = bundle
 
