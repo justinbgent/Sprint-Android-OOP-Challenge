@@ -53,9 +53,11 @@ object RetrofitInstance {
 
 
 class NeededValues(context: Context) {
-    var techs: List<Tech>? = null
-    var structuresAndTechList = mutableListOf<MyValues>()
-    var favorite = false
+    companion object{
+        var favorite = false
+        var theList = mutableListOf<MyValues>()
+    }
+
     var listener: WorkWithThread? = null
 
     interface WorkWithThread {
@@ -77,7 +79,7 @@ class NeededValues(context: Context) {
             override fun onResponse(call: Call<Technologies>, response: Response<Technologies>) {
                 val myList = mutableListOf<MyValues>()
                 response.body()?.technologies?.forEach{
-                    myList.add(it)
+                    myList.add(TechToMake(it.id, it.name, it.description, false))
                 }
                 listener?.getList(myList)
             }
@@ -93,7 +95,7 @@ class NeededValues(context: Context) {
             override fun onResponse(call: Call<Structures>, response: Response<Structures>) {
                 val myList = mutableListOf<MyValues>()
                 response.body()?.structures?.forEach{
-                    myList.add(it)
+                    myList.add(StructureToMake(it.id, it.name, it.age, false))
                 }
                 listener?.getList(myList)
             }
@@ -101,3 +103,4 @@ class NeededValues(context: Context) {
 
     }
 }
+

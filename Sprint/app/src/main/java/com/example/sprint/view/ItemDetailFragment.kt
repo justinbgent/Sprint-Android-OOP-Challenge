@@ -8,9 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.interfaces.R
-import com.example.sprint.viewmodel.MyValues
-import com.example.sprint.viewmodel.NeededValues.favorite
-import com.example.sprint.viewmodel.NeededValues.structuresAndTechList
+import com.example.sprint.model.MyValues
+import com.example.sprint.model.StructureToMake
+import com.example.sprint.model.TechToMake
+import com.example.sprint.viewmodel.NeededValues.Companion.favorite
+import com.example.sprint.viewmodel.NeededValues.Companion.theList
 import kotlinx.android.synthetic.main.activity_item_detail.*
 import kotlinx.android.synthetic.main.item_detail.view.*
 
@@ -32,27 +34,52 @@ class ItemDetailFragment : Fragment() {
         
 //        rootView.item_detail.text = item?.
 
-        if (favorite){
-            rootView.btn_favorite.text = "Unfavorite"
-        }else{
-            rootView.btn_favorite.text = "Favorite"
+        rootView.item_detail.text = item?.id.toString()
+        if (item is TechToMake){
+            rootView.txt_description_age.text = (item as TechToMake).description
+            rootView.txt_tech_struct.text = "Technology"
+        }
+        if (item is StructureToMake){
+            rootView.txt_description_age.text = (item as StructureToMake).age
+            rootView.txt_tech_struct.text = "Structure"
         }
 
+
+        fun setButtonText(){
+            if (item != null){
+                if (item?.favorite!!){
+                    rootView.btn_favorite.text = "Unfavorite"
+                }else{
+                    rootView.btn_favorite.text = "Favorite"
+                }
+
+            }
+        }
+
+        setButtonText()
+
         rootView.btn_favorite.setOnClickListener {
+            setButtonText()
             if (!favorite){
                 rootView.btn_favorite.text = "Unfavorite"
                 favorite = true
-                structuresAndTechList.forEach {
+                updateObject?.updateFavoriteState(favorite)
+                theList.forEach {
                     if (it.id == item?.id){
                         it.favorite = favorite
                     }
                 }
-                updateObject?.updateFavoriteState(favorite)
             }else{
                 rootView.btn_favorite.text = "Favorite"
                 favorite = false
                 updateObject?.updateFavoriteState(favorite)
+                theList.forEach {
+                    if (it.id == item?.id){
+                        it.favorite = favorite
+                    }
+                }
             }
+
         }
         return rootView
     }
